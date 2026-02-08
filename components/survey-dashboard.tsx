@@ -1,6 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+
+function formatRomanianPhone(phone: string | null | undefined): string {
+	if (!phone || typeof phone !== 'string') return '—'
+	const raw = phone.replace(/\s/g, '')
+	if (!raw.startsWith('+40') && !raw.startsWith('0040')) return phone
+	const digits = raw.replace(/^\+40|^0040/, '').replace(/\D/g, '')
+	if (digits.length !== 9) return phone
+	return `+4 0${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
+}
 import { useAuth } from '@/lib/auth-context'
 import { CUILookup } from '@/components/cui-lookup'
 import { SurveyForm } from '@/components/survey-form'
@@ -237,7 +246,7 @@ export function SurveyDashboard() {
 								Număr de telefon de apelat:
 							</p>
 							<p className="text-4xl md:text-5xl font-bold text-indigo-600 text-center tracking-wider py-4">
-								{company.telefon || '—'}
+								{formatRomanianPhone(company.telefon)}
 							</p>
 							<div className="flex flex-col gap-3 mt-8 max-w-md mx-auto">
 								<button
