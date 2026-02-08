@@ -248,6 +248,11 @@ export function SurveyDashboard() {
 							<p className="text-4xl md:text-5xl font-bold text-indigo-600 text-center tracking-wider py-4">
 								{formatRomanianPhone(company.telefon)}
 							</p>
+							<p className="text-base text-gray-700 text-center max-w-lg mx-auto leading-relaxed mt-6 mb-2">
+								{user?.username === 'nectarie'
+									? 'Bună ziua, sunt student la ASE și realizez un studiu despre dificultățile la început în antreprenoriat. Aveți timp 2 minute să răspundeți la 7 întrebări? Răspunsurile sunt anonime și folosite doar în scop academic.'
+									: 'Bună ziua, sunt studentă la ASE și realizez un studiu despre dificultățile la început în antreprenoriat. Aveți timp 2 minute să răspundeți la 7 întrebări? Răspunsurile sunt anonime și folosite doar în scop academic.'}
+							</p>
 							<div className="flex flex-col gap-3 mt-8 max-w-md mx-auto">
 								<button
 									type="button"
