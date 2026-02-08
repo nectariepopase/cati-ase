@@ -57,6 +57,11 @@ export function SurveyDashboard() {
 		setCompany(null)
 	}
 
+	const handleRestartWithoutSave = () => {
+		setCompany(null)
+		setSuccessMessage(null)
+	}
+
 	const handleSurveyAbandoned = async (partialData: Partial<SurveyFormData>) => {
 		if (!user || !company) return
 
@@ -145,7 +150,7 @@ export function SurveyDashboard() {
 		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
 			<div className="max-w-4xl mx-auto p-6">
 				{/* Header */}
-				<div className="bg-white rounded-lg shadow-md p-4 mb-6 flex justify-between items-center">
+				<div className="bg-white rounded-lg shadow-md p-4 mb-6 flex justify-between items-center flex-wrap gap-2">
 					<div>
 						<h1 className="text-2xl font-bold text-gray-900">
 							Sistem CATI - Sondaj Contabilitate
@@ -154,12 +159,23 @@ export function SurveyDashboard() {
 							Operator: <span className="font-semibold capitalize">{user?.username}</span>
 						</p>
 					</div>
-					<button
-						onClick={logout}
-						className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors font-medium"
-					>
-						Deconectare
-					</button>
+					<div className="flex gap-2">
+						{company && (
+							<button
+								onClick={handleRestartWithoutSave}
+								className="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors font-medium"
+								title="Resetează sondajul fără să salveze nimic în baza de date"
+							>
+								Reîncepe sondaj
+							</button>
+						)}
+						<button
+							onClick={logout}
+							className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors font-medium"
+						>
+							Deconectare
+						</button>
+					</div>
 				</div>
 
 				{/* Success Message */}
