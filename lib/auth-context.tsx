@@ -18,7 +18,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 const USERS: Record<string, string> = {
 	alexandra: '1234',
-	nectarie: '1234'
+	nectarie: '1234',
+	ioana: '1234'
 }
 
 function isValidUser(username: string): boolean {

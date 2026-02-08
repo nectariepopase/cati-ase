@@ -11,11 +11,13 @@ import { supabase } from '@/lib/supabase'
 export function SurveyDashboard() {
 	const { user, logout } = useAuth()
 	const [company, setCompany] = useState<CompanyData | null>(null)
+	const [callAnswered, setCallAnswered] = useState<boolean | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
 	const handleCompanyFound = (companyData: CompanyData) => {
 		setCompany(companyData)
+		setCallAnswered(null)
 		setSuccessMessage(null)
 	}
 
@@ -41,9 +43,10 @@ export function SurveyDashboard() {
 
 			// Show success message
 			setSuccessMessage(`Date trimise pentru ${company?.nume}`)
-			
+
 			// Reset form for next survey
 			setCompany(null)
+			setCallAnswered(null)
 		} catch (error) {
 			console.error('Error submitting survey:', error)
 			alert('Eroare la trimiterea datelor. Vă rugăm să încercați din nou.')
@@ -55,10 +58,12 @@ export function SurveyDashboard() {
 	const handleNewSurvey = () => {
 		setSuccessMessage(null)
 		setCompany(null)
+		setCallAnswered(null)
 	}
 
 	const handleRestartWithoutSave = () => {
 		setCompany(null)
+		setCallAnswered(null)
 		setSuccessMessage(null)
 	}
 
@@ -96,6 +101,7 @@ export function SurveyDashboard() {
 
 			setSuccessMessage(`Sondaj abandonat pentru ${company.nume} - Apel închis / abandonat de respondent`)
 			setCompany(null)
+			setCallAnswered(null)
 		} catch (error) {
 			console.error('Error saving abandoned survey:', error)
 			alert('Eroare la salvarea datelor. Vă rugăm să încercați din nou.')
@@ -138,6 +144,7 @@ export function SurveyDashboard() {
 
 			setSuccessMessage(`Sondaj încheiat pentru ${company.nume} - ${motiv}`)
 			setCompany(null)
+			setCallAnswered(null)
 		} catch (error) {
 			console.error('Error saving survey end:', error)
 			alert('Eroare la salvarea datelor. Vă rugăm să încercați din nou.')
@@ -211,7 +218,57 @@ export function SurveyDashboard() {
 					<CUILookup onCompanyFound={handleCompanyFound} />
 				)}
 
-				{company && !successMessage && user && (
+				{/* Ecran apel: număr mare + butoane înainte de Q1 */}
+				{company && !successMessage && callAnswered === null && (
+					<div className="bg-white p-6 rounded-lg shadow-md">
+						<div className="mb-6">
+							<h2 className="text-xl font-semibold text-gray-900 mb-2">
+								Date Firmă
+							</h2>
+							<div className="space-y-1 text-sm text-gray-600">
+								<p><span className="font-medium">Nume:</span> {company.nume}</p>
+								<p><span className="font-medium">CUI:</span> {company.cui}</p>
+								<p><span className="font-medium">Localitate:</span> {company.localitate}</p>
+								<p><span className="font-medium">Județ:</span> {company.judet}</p>
+							</div>
+						</div>
+						<div className="border-t pt-8 pb-8">
+							<p className="text-gray-600 mb-2 text-center">
+								Număr de telefon de apelat:
+							</p>
+							<p className="text-4xl md:text-5xl font-bold text-indigo-600 text-center tracking-wider py-4">
+								{company.telefon || '—'}
+							</p>
+							<div className="flex flex-col gap-3 mt-8 max-w-md mx-auto">
+								<button
+									type="button"
+									onClick={() => handleSurveyEnded('Nu a răspuns la telefon')}
+									disabled={isSubmitting}
+									className="px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+								>
+									{isSubmitting ? 'Se salvează...' : 'Nu a răspuns la telefon'}
+								</button>
+								<button
+									type="button"
+									onClick={() => handleSurveyEnded('A răspuns, nu a dorit să vorbească')}
+									disabled={isSubmitting}
+									className="px-6 py-3 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+								>
+									{isSubmitting ? 'Se salvează...' : 'A răspuns, nu a dorit să vorbească'}
+								</button>
+								<button
+									type="button"
+									onClick={() => setCallAnswered(true)}
+									className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium"
+								>
+									A răspuns
+								</button>
+							</div>
+						</div>
+					</div>
+				)}
+
+				{company && !successMessage && user && callAnswered === true && (
 					<SurveyForm
 						company={company}
 						operator={user.username}
