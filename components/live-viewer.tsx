@@ -84,6 +84,12 @@ export function LiveViewer() {
 	const q7 = aggregateByField(data, 'suma_lunara_contabilitate')
 	const daNu = aggregateDaNu(data)
 
+	const total = data.length
+	const apeluriRatate = data.filter((r) => r.motiv_incheiere === 'Nu a răspuns la telefon').length
+	const refuzat = data.filter((r) => r.motiv_incheiere === 'A răspuns, nu a dorit să vorbească').length
+	const rataApeluriRatate = total > 0 ? ((apeluriRatate / total) * 100).toFixed(1) : '0'
+	const rataRefuzat = total > 0 ? ((refuzat / total) * 100).toFixed(1) : '0'
+
 	const pieRadius = { inner: 20, outer: 42 }
 
 	return (
@@ -93,7 +99,9 @@ export function LiveViewer() {
 		>
 			<div className="p-2 flex-shrink-0">
 				<h3 className="text-sm font-bold text-indigo-600 mb-1">LIVE</h3>
-				<p className="text-xs text-gray-500 mb-2">n={data.length}</p>
+				<p className="text-xs text-gray-500 mb-2">
+					n={data.length} | refuzat: {rataRefuzat}% | apeluri ratate: {rataApeluriRatate}%
+				</p>
 			</div>
 			<div className="flex-1 min-h-0 flex flex-col gap-2 px-2 pb-2">
 				{/* Q1 + Q2 — două coloane */}
