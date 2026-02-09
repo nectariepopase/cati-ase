@@ -90,13 +90,9 @@ export function LiveViewer() {
 	const validData = filteredData.filter((r) => !r.motiv_incheiere || r.motiv_incheiere.trim() === '')
 	const n0 = validData.length
 
-	// Q1 DA/NU include și răspunsuri „Administrator absent” (NU) și „Apel abandonat” (DA)
+	// Q1 DA/NU: completate (DA) + Administrator absent (NU). Excludem Apel abandonat (răspuns invalid/incomplet)
 	const daNuData = filteredData.filter(
-		(r) =>
-			!r.motiv_incheiere ||
-			r.motiv_incheiere.trim() === '' ||
-			r.motiv_incheiere === 'Administrator absent la telefon' ||
-			r.motiv_incheiere === 'Apel închis / abandonat de respondent'
+		(r) => !r.motiv_incheiere || r.motiv_incheiere.trim() === '' || r.motiv_incheiere === 'Administrator absent la telefon'
 	)
 
 	const q2 = aggregateByField(validData, 'procent_cheltuieli_contabil')
