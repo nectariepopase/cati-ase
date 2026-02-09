@@ -136,7 +136,7 @@ export function LiveViewer() {
 					n={total} n0={n0} | valide: {rataValide}% | refuzat: {rataRefuzat}% | apeluri ratate: {rataApeluriRatate}%
 				</p>
 			</div>
-			<div className="flex-1 min-h-0 flex flex-col gap-2 px-2 pb-2">
+			<div key={operatorFilter} className="flex-1 min-h-0 flex flex-col gap-2 px-2 pb-2">
 				{/* Q1 + Q2 — două coloane */}
 				<div className="flex-1 min-h-0 grid grid-cols-2 gap-2">
 					<div className="min-h-0 flex flex-col">
