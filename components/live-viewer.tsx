@@ -60,8 +60,11 @@ function aggregateDaNu(data: SurveyResponse[]): { name: string; value: number }[
 	]
 }
 
+type OperatorFilter = 'all' | 'nectarie' | 'alexandra' | 'ioana'
+
 export function LiveViewer() {
 	const [data, setData] = useState<SurveyResponse[]>([])
+	const [operatorFilter, setOperatorFilter] = useState<OperatorFilter>('all')
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -81,7 +84,10 @@ export function LiveViewer() {
 		return () => clearInterval(interval)
 	}, [])
 
-	const validData = data.filter((r) => !r.motiv_incheiere || r.motiv_incheiere.trim() === '')
+	const filteredData =
+		operatorFilter === 'all' ? data : data.filter((r) => r.operator?.toLowerCase() === operatorFilter)
+
+	const validData = filteredData.filter((r) => !r.motiv_incheiere || r.motiv_incheiere.trim() === '')
 	const n0 = validData.length
 
 	const q2 = aggregateByField(validData, 'procent_cheltuieli_contabil')
@@ -92,9 +98,9 @@ export function LiveViewer() {
 	const q7 = aggregateByField(validData, 'suma_lunara_contabilitate')
 	const daNu = aggregateDaNu(validData)
 
-	const total = data.length
-	const apeluriRatate = data.filter((r) => r.motiv_incheiere === 'Nu a răspuns la telefon').length
-	const refuzat = data.filter((r) => r.motiv_incheiere === 'A răspuns, nu a dorit să vorbească').length
+	const total = filteredData.length
+	const apeluriRatate = filteredData.filter((r) => r.motiv_incheiere === 'Nu a răspuns la telefon').length
+	const refuzat = filteredData.filter((r) => r.motiv_incheiere === 'A răspuns, nu a dorit să vorbească').length
 	const rataApeluriRatate = total > 0 ? ((apeluriRatate / total) * 100).toFixed(1) : '0'
 	const rataRefuzat = total > 0 ? ((refuzat / total) * 100).toFixed(1) : '0'
 	const rataValide = total > 0 ? ((n0 / total) * 100).toFixed(1) : '0'
@@ -107,7 +113,25 @@ export function LiveViewer() {
 			style={{ height: '100vh' }}
 		>
 			<div className="p-2 flex-shrink-0">
-				<h3 className="text-sm font-bold text-indigo-600 mb-1">LIVE</h3>
+				<div className="flex items-center justify-between gap-1 mb-1">
+					<h3 className="text-sm font-bold text-indigo-600">LIVE</h3>
+					<div className="flex gap-1 flex-wrap">
+						{(['all', 'nectarie', 'alexandra', 'ioana'] as const).map((op) => (
+							<button
+								key={op}
+								type="button"
+								onClick={() => setOperatorFilter(op)}
+								className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${
+									operatorFilter === op
+										? 'bg-indigo-600 text-white'
+										: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+								}`}
+							>
+								{op === 'all' ? 'Toate' : op.charAt(0).toUpperCase() + op.slice(1)}
+							</button>
+						))}
+					</div>
+				</div>
 				<p className="text-xs text-gray-500 mb-2">
 					n={total} n0={n0} | valide: {rataValide}% | refuzat: {rataRefuzat}% | apeluri ratate: {rataApeluriRatate}%
 				</p>
