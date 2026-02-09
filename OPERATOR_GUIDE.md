@@ -56,7 +56,7 @@ Odată ce persoana a confirmat că este administrator, vor apărea toate cele 7 
 **Acțiune**: Click pe butonul cu scorul menționat.
 
 #### Întrebarea 4: Justificare Obligativitate
-**Text**: "Pe o scară de la 1 la 5, cât de justificată considerați obligativitatea legală de a semna situațiile financiare exclusiv prin contabil autorizat/expert pentru microîntreprinderi în România?"
+**Text**: "Pe o scară de la 1 la 5, în ce măsură considerați întemeiată cerința legală ca situațiile financiare ale microîntreprinderilor să fie semnate doar de un expert contabil autorizat?"
 
 **Opțiuni**: Butoane de la 1 la 5
 - 1 = Deloc justificată

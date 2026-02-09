@@ -199,7 +199,7 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 						Întrebarea 4
 					</h3>
 					<p className="text-gray-700">
-						Pe o scară de la 1 la 5, cât de justificată considerați obligativitatea legală de a semna situațiile financiare exclusiv prin contabil autorizat/expert pentru microîntreprinderi în România?
+						Pe o scară de la 1 la 5, în ce măsură considerați întemeiată cerința legală ca situațiile financiare ale microîntreprinderilor să fie semnate doar de un expert contabil autorizat?
 					</p>
 					<div className="flex flex-wrap gap-2">
 						{[1, 2, 3, 4, 5].map((score) => (
