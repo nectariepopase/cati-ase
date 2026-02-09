@@ -52,8 +52,8 @@ function parseTargetareText(text: string): CompanyData | null {
 			administrator = adminMatch[1].trim()
 		}
 		
-		// Extract address (format: Municipiul X, Sector/Judet Y, Str...)
-		const addressMatch = text.match(/Adresa\s+(Municipiul [^]+?)(?=Top firme|Administrator)/i)
+		// Extract address (format variabil: Municipiul X, Jud. Y, Sat X Ors./Com. Y, etc.)
+		const addressMatch = text.match(/Adresa\s+([\s\S]+?)(?=Top firme|Administrator)/i)
 		let localitate = ''
 		let judet = ''
 		let adresa = ''
@@ -61,20 +61,45 @@ function parseTargetareText(text: string): CompanyData | null {
 		if (addressMatch) {
 			adresa = addressMatch[1].trim()
 			
-			// Extract locality (Municipiul X or Orasul X, etc)
+			// Extract county/sector (Jud. Ilfov, Judet X, Sector 1)
+			const judetMatch = adresa.match(/Sector\s+(\d+)|Judet\s+([^,\n]+)|Jud\.\s+([^,\n]+)/i)
+			if (judetMatch) {
+				judet = (judetMatch[1] || judetMatch[2] || judetMatch[3] || '').trim()
+				if (judetMatch[1]) {
+					judet = `Sector ${judet}`
+				}
+			}
+			
+			// Extract locality: Municipiul/Orasul/Comuna X, sau Sat X Ors./Com. Y (Ilfov etc.)
 			const localitateMatch = adresa.match(/(Municipiul|Orasul|Comuna)\s+([^,]+)/i)
 			if (localitateMatch) {
 				localitate = localitateMatch[2].trim()
-			}
-			
-			// Extract county/sector
-			const judetMatch = adresa.match(/Sector\s+(\d+)|Judet\s+([^,]+)|Jud\.\s+([^,]+)/i)
-			if (judetMatch) {
-				judet = judetMatch[1] || judetMatch[2] || judetMatch[3]
-				judet = judet.trim()
-				// If it's a sector, add "Sector" prefix
-				if (judetMatch[1]) {
-					judet = `Sector ${judet}`
+			} else {
+				// Ilfov format: "Sat Varteju Ors. Magurele" sau "Sat X Com. Y" (Ors./Com. cu punct)
+				const satOrsMatch = adresa.match(/Sat\s+([^\s,]+)\s+Ors\.\s+([^,\s]+)/i)
+				if (satOrsMatch) {
+					localitate = `${satOrsMatch[1].trim()}, ${satOrsMatch[2].trim()}`
+				} else {
+					const satComMatch = adresa.match(/Sat\s+([^\s,]+)\s+Com\.\s+([^,\s]+)/i)
+					if (satComMatch) {
+						localitate = `${satComMatch[1].trim()}, ${satComMatch[2].trim()}`
+					} else {
+						// Ors. X sau Com. X standalone
+						const orsMatch = adresa.match(/Ors\.\s+([^,\s]+)/i)
+						if (orsMatch) {
+							localitate = orsMatch[1].trim()
+						} else {
+							const comMatch = adresa.match(/Com\.\s+([^,\s]+)/i)
+							if (comMatch) {
+								localitate = comMatch[1].trim()
+							} else {
+								const satMatch = adresa.match(/Sat\s+([^,\s]+)/i)
+								if (satMatch) {
+									localitate = satMatch[1].trim()
+								}
+							}
+						}
+					}
 				}
 			}
 		}

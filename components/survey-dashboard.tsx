@@ -272,6 +272,14 @@ export function SurveyDashboard() {
 								</button>
 								<button
 									type="button"
+									onClick={() => handleSurveyEnded('Ineligibil')}
+									disabled={isSubmitting}
+									className="px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+								>
+									{isSubmitting ? 'Se salvează...' : 'Ineligibil'}
+								</button>
+								<button
+									type="button"
 									onClick={() => setCallAnswered(true)}
 									className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium"
 								>
