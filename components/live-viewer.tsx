@@ -90,13 +90,22 @@ export function LiveViewer() {
 	const validData = filteredData.filter((r) => !r.motiv_incheiere || r.motiv_incheiere.trim() === '')
 	const n0 = validData.length
 
+	// Q1 DA/NU include și răspunsuri „Administrator absent” (NU) și „Apel abandonat” (DA)
+	const daNuData = filteredData.filter(
+		(r) =>
+			!r.motiv_incheiere ||
+			r.motiv_incheiere.trim() === '' ||
+			r.motiv_incheiere === 'Administrator absent la telefon' ||
+			r.motiv_incheiere === 'Apel închis / abandonat de respondent'
+	)
+
 	const q2 = aggregateByField(validData, 'procent_cheltuieli_contabil')
 	const q3 = aggregateScore1to5(validData, 'impediment_contabil_score')
 	const q4 = aggregateScore1to5(validData, 'justificare_obligativitate_score')
 	const q5 = aggregateScore1to5(validData, 'capabil_contabilitate_proprie_score')
 	const q6 = aggregateScore1to5(validData, 'influenta_costuri_contabilitate')
 	const q7 = aggregateByField(validData, 'suma_lunara_contabilitate')
-	const daNu = aggregateDaNu(validData)
+	const daNu = aggregateDaNu(daNuData)
 
 	const total = filteredData.length
 	const apeluriRatate = filteredData.filter((r) => r.motiv_incheiere === 'Nu a răspuns la telefon').length
