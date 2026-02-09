@@ -8,9 +8,9 @@ export const surveySchema = z.object({
 	cod_caen: z.string().min(1, 'Cod CAEN este obligatoriu'),
 	este_administrator: z.boolean(),
 	procent_cheltuieli_contabil: z.string().min(1, 'Vă rugăm să selectați un răspuns'),
-	impediment_contabil_score: z.number().min(1).max(5),
-	justificare_obligativitate_score: z.number().min(1).max(5),
-	capabil_contabilitate_proprie_score: z.number().min(1).max(5),
+	impediment_contabil_score: z.number().min(0, 'Vă rugăm să selectați un răspuns').max(5),
+	justificare_obligativitate_score: z.number().min(0, 'Vă rugăm să selectați un răspuns').max(5),
+	capabil_contabilitate_proprie_score: z.number().min(0, 'Vă rugăm să selectați un răspuns').max(5),
 	influenta_costuri_contabilitate: z.string().min(1, 'Vă rugăm să selectați un răspuns'),
 	suma_lunara_contabilitate: z.string().min(1, 'Suma lunară este obligatorie')
 })

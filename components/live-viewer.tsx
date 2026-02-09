@@ -33,15 +33,22 @@ function aggregateByField(
 }
 
 function aggregateScore1to5(data: SurveyResponse[], field: keyof SurveyResponse): { score: string; count: number }[] {
-	const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+	const counts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
 	data.forEach((row) => {
 		const val = row[field]
-		const num = typeof val === 'string' ? parseInt(val, 10) : val
-		if (typeof num === 'number' && !isNaN(num) && num >= 1 && num <= 5) {
-			counts[num] = (counts[num] || 0) + 1
+		if (typeof val === 'string' && val === 'Nu știu/Nu răspund') {
+			counts[0]++
+		} else {
+			const num = typeof val === 'string' ? parseInt(val, 10) : val
+			if (typeof num === 'number' && !isNaN(num) && num >= 0 && num <= 5) {
+				counts[num] = (counts[num] || 0) + 1
+			}
 		}
 	})
-	return [1, 2, 3, 4, 5].map((s) => ({ score: String(s), count: counts[s] || 0 }))
+	return [
+		{ score: 'Nu știu', count: counts[0] || 0 },
+		...[1, 2, 3, 4, 5].map((s) => ({ score: String(s), count: counts[s] || 0 }))
+	]
 }
 
 function aggregateDaNu(data: SurveyResponse[]): { name: string; value: number }[] {
@@ -168,9 +175,9 @@ export function LiveViewer() {
 									<YAxis
 										type="category"
 										dataKey="score"
-										domain={['1', '2', '3', '4', '5']}
-										tick={{ fontSize: 11, fontWeight: 600 }}
-										width={28}
+										domain={['Nu știu', '1', '2', '3', '4', '5']}
+										tick={{ fontSize: 10, fontWeight: 600 }}
+										width={36}
 										axisLine
 										tickLine
 										interval={0}
@@ -190,9 +197,9 @@ export function LiveViewer() {
 									<YAxis
 										type="category"
 										dataKey="score"
-										domain={['1', '2', '3', '4', '5']}
-										tick={{ fontSize: 11, fontWeight: 600 }}
-										width={28}
+										domain={['Nu știu', '1', '2', '3', '4', '5']}
+										tick={{ fontSize: 10, fontWeight: 600 }}
+										width={36}
 										axisLine
 										tickLine
 										interval={0}
@@ -216,9 +223,9 @@ export function LiveViewer() {
 									<YAxis
 										type="category"
 										dataKey="score"
-										domain={['1', '2', '3', '4', '5']}
-										tick={{ fontSize: 11, fontWeight: 600 }}
-										width={28}
+										domain={['Nu știu', '1', '2', '3', '4', '5']}
+										tick={{ fontSize: 10, fontWeight: 600 }}
+										width={36}
 										axisLine
 										tickLine
 										interval={0}
@@ -238,9 +245,9 @@ export function LiveViewer() {
 									<YAxis
 										type="category"
 										dataKey="score"
-										domain={['1', '2', '3', '4', '5']}
-										tick={{ fontSize: 11, fontWeight: 600 }}
-										width={28}
+										domain={['Nu știu', '1', '2', '3', '4', '5']}
+										tick={{ fontSize: 10, fontWeight: 600 }}
+										width={36}
 										axisLine
 										tickLine
 										interval={0}

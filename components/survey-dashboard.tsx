@@ -81,6 +81,7 @@ export function SurveyDashboard() {
 
 		setIsSubmitting(true)
 		try {
+			const safeScore = (s: number | undefined) => (typeof s === 'number' && s >= 0 && s <= 5 ? s : 0)
 			const payload = {
 				cui: company.cui,
 				nume_firma: company.nume,
@@ -89,9 +90,9 @@ export function SurveyDashboard() {
 				cod_caen: company.codCaen,
 				este_administrator: true,
 				procent_cheltuieli_contabil: partialData.procent_cheltuieli_contabil || 'N/A',
-				impediment_contabil_score: partialData.impediment_contabil_score || 0,
-				justificare_obligativitate_score: partialData.justificare_obligativitate_score || 0,
-				capabil_contabilitate_proprie_score: partialData.capabil_contabilitate_proprie_score || 0,
+				impediment_contabil_score: safeScore(partialData.impediment_contabil_score),
+				justificare_obligativitate_score: safeScore(partialData.justificare_obligativitate_score),
+				capabil_contabilitate_proprie_score: safeScore(partialData.capabil_contabilitate_proprie_score),
 				influenta_costuri_contabilitate: partialData.influenta_costuri_contabilitate || 'N/A',
 				suma_lunara_contabilitate: partialData.suma_lunara_contabilitate || 'N/A',
 				operator: user.username,

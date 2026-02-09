@@ -32,9 +32,9 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 			cod_caen: company.codCaen,
 			este_administrator: false,
 			procent_cheltuieli_contabil: '',
-			impediment_contabil_score: 0,
-			justificare_obligativitate_score: 0,
-			capabil_contabilitate_proprie_score: 0,
+			impediment_contabil_score: -1,
+			justificare_obligativitate_score: -1,
+			capabil_contabilitate_proprie_score: -1,
 			influenta_costuri_contabilitate: '',
 			suma_lunara_contabilitate: ''
 		}
@@ -132,6 +132,17 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 								{option}
 							</button>
 						))}
+						<button
+							type="button"
+							onClick={() => setValue('procent_cheltuieli_contabil', 'Nu știu/Nu răspund', { shouldValidate: true })}
+							className={`col-span-2 px-3 py-3 border rounded-md transition-colors text-sm font-medium ${
+								watch('procent_cheltuieli_contabil') === 'Nu știu/Nu răspund'
+									? 'bg-gray-500 text-white border-gray-500'
+									: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+							}`}
+						>
+							Nu știu/Nu răspund
+						</button>
 					</div>
 					{errors.procent_cheltuieli_contabil && (
 						<p className="text-red-600 text-sm">{errors.procent_cheltuieli_contabil.message}</p>
@@ -146,13 +157,13 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 					<p className="text-gray-700">
 						Pe o scară de la 1 la 5 (1 - deloc, 5 - foarte mult), în ce măsură obligativitatea de a avea un contabil autorizat a reprezentat un impediment în decizia de a porni afacerea?
 					</p>
-					<div className="flex gap-2 justify-between">
+					<div className="flex flex-wrap gap-2">
 						{[1, 2, 3, 4, 5].map((score) => (
 							<button
 								key={score}
 								type="button"
 								onClick={() => setValue('impediment_contabil_score', score, { shouldValidate: true })}
-								className={`flex-1 px-4 py-3 border rounded-md transition-colors font-semibold ${
+								className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
 									watch('impediment_contabil_score') === score
 										? 'bg-indigo-600 text-white border-indigo-600'
 										: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
@@ -161,6 +172,17 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 								{score}
 							</button>
 						))}
+						<button
+							type="button"
+							onClick={() => setValue('impediment_contabil_score', 0, { shouldValidate: true })}
+							className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
+								watch('impediment_contabil_score') === 0
+									? 'bg-gray-500 text-white border-gray-500'
+									: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+							}`}
+						>
+							Nu știu/Nu răspund
+						</button>
 					</div>
 					<div className="flex justify-between text-xs text-gray-500">
 						<span>1 - Deloc</span>
@@ -179,13 +201,13 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 					<p className="text-gray-700">
 						Pe o scară de la 1 la 5, cât de justificată considerați obligativitatea legală de a semna situațiile financiare exclusiv prin contabil autorizat/expert pentru microîntreprinderi în România?
 					</p>
-					<div className="flex gap-2 justify-between">
+					<div className="flex flex-wrap gap-2">
 						{[1, 2, 3, 4, 5].map((score) => (
 							<button
 								key={score}
 								type="button"
 								onClick={() => setValue('justificare_obligativitate_score', score, { shouldValidate: true })}
-								className={`flex-1 px-4 py-3 border rounded-md transition-colors font-semibold ${
+								className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
 									watch('justificare_obligativitate_score') === score
 										? 'bg-indigo-600 text-white border-indigo-600'
 										: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
@@ -194,6 +216,17 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 								{score}
 							</button>
 						))}
+						<button
+							type="button"
+							onClick={() => setValue('justificare_obligativitate_score', 0, { shouldValidate: true })}
+							className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
+								watch('justificare_obligativitate_score') === 0
+									? 'bg-gray-500 text-white border-gray-500'
+									: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+							}`}
+						>
+							Nu știu/Nu răspund
+						</button>
 					</div>
 					<div className="flex justify-between text-xs text-gray-500">
 						<span>1 - Deloc justificată</span>
@@ -212,13 +245,13 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 					<p className="text-gray-700">
 						Pe o scară de la 1 la 5, cât de capabil v-ați simți să vă țineți contabilitatea în regim propriu și să depuneți singur declarațiile fiscale (fără contabil), dacă legea ar permite acest lucru? (de exemplu cu ajutorul e-Factura/e-TVA)
 					</p>
-					<div className="flex gap-2 justify-between">
+					<div className="flex flex-wrap gap-2">
 						{[1, 2, 3, 4, 5].map((score) => (
 							<button
 								key={score}
 								type="button"
 								onClick={() => setValue('capabil_contabilitate_proprie_score', score, { shouldValidate: true })}
-								className={`flex-1 px-4 py-3 border rounded-md transition-colors font-semibold ${
+								className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
 									watch('capabil_contabilitate_proprie_score') === score
 										? 'bg-indigo-600 text-white border-indigo-600'
 										: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
@@ -227,6 +260,17 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 								{score}
 							</button>
 						))}
+						<button
+							type="button"
+							onClick={() => setValue('capabil_contabilitate_proprie_score', 0, { shouldValidate: true })}
+							className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
+								watch('capabil_contabilitate_proprie_score') === 0
+									? 'bg-gray-500 text-white border-gray-500'
+									: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+							}`}
+						>
+							Nu știu/Nu răspund
+						</button>
 					</div>
 					<div className="flex justify-between text-xs text-gray-500">
 						<span>1 - Deloc capabil</span>
@@ -245,13 +289,13 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 					<p className="text-gray-700">
 						În ce măsură considerați că nivelul costurilor cu serviciile de contabilitate influențează bugetul disponibil pentru alte direcții? (de exemplu marketing, stocuri etc)
 					</p>
-					<div className="flex gap-2 justify-between">
+					<div className="flex flex-wrap gap-2">
 						{[1, 2, 3, 4, 5].map((score) => (
 							<button
 								key={score}
 								type="button"
 								onClick={() => setValue('influenta_costuri_contabilitate', score.toString(), { shouldValidate: true })}
-								className={`flex-1 px-4 py-3 border rounded-md transition-colors font-semibold ${
+								className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
 									watch('influenta_costuri_contabilitate') === score.toString()
 										? 'bg-indigo-600 text-white border-indigo-600'
 										: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
@@ -260,6 +304,17 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 								{score}
 							</button>
 						))}
+						<button
+							type="button"
+							onClick={() => setValue('influenta_costuri_contabilitate', 'Nu știu/Nu răspund', { shouldValidate: true })}
+							className={`flex-1 min-w-[3rem] px-4 py-3 border rounded-md transition-colors font-semibold ${
+								watch('influenta_costuri_contabilitate') === 'Nu știu/Nu răspund'
+									? 'bg-gray-500 text-white border-gray-500'
+									: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+							}`}
+						>
+							Nu știu/Nu răspund
+						</button>
 					</div>
 					<div className="flex justify-between text-xs text-gray-500">
 						<span>1 - Deloc</span>
@@ -293,6 +348,17 @@ export function SurveyForm({ company, operator, onSubmit, onSurveyEnded, onSurve
 								{option} RON
 							</button>
 						))}
+						<button
+							type="button"
+							onClick={() => setValue('suma_lunara_contabilitate', 'Nu știu/Nu răspund', { shouldValidate: true })}
+							className={`col-span-2 px-3 py-3 border rounded-md transition-colors text-sm font-medium ${
+								watch('suma_lunara_contabilitate') === 'Nu știu/Nu răspund'
+									? 'bg-gray-500 text-white border-gray-500'
+									: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+							}`}
+						>
+							Nu știu/Nu răspund
+						</button>
 					</div>
 					{errors.suma_lunara_contabilitate && (
 						<p className="text-red-600 text-sm">{errors.suma_lunara_contabilitate.message}</p>
