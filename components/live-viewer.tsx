@@ -27,8 +27,6 @@ function aggregateByField(
 		if (val !== undefined && val !== null && val !== '') {
 			const key = String(val)
 			counts[key] = (counts[key] || 0) + 1
-		} else {
-			counts['N/A'] = (counts['N/A'] || 0) + 1
 		}
 	})
 	return Object.entries(counts).map(([name, value]) => ({ name, value }))
@@ -76,19 +74,23 @@ export function LiveViewer() {
 		return () => clearInterval(interval)
 	}, [])
 
-	const q2 = aggregateByField(data, 'procent_cheltuieli_contabil')
-	const q3 = aggregateScore1to5(data, 'impediment_contabil_score')
-	const q4 = aggregateScore1to5(data, 'justificare_obligativitate_score')
-	const q5 = aggregateScore1to5(data, 'capabil_contabilitate_proprie_score')
-	const q6 = aggregateScore1to5(data, 'influenta_costuri_contabilitate')
-	const q7 = aggregateByField(data, 'suma_lunara_contabilitate')
-	const daNu = aggregateDaNu(data)
+	const validData = data.filter((r) => !r.motiv_incheiere || r.motiv_incheiere.trim() === '')
+	const n0 = validData.length
+
+	const q2 = aggregateByField(validData, 'procent_cheltuieli_contabil')
+	const q3 = aggregateScore1to5(validData, 'impediment_contabil_score')
+	const q4 = aggregateScore1to5(validData, 'justificare_obligativitate_score')
+	const q5 = aggregateScore1to5(validData, 'capabil_contabilitate_proprie_score')
+	const q6 = aggregateScore1to5(validData, 'influenta_costuri_contabilitate')
+	const q7 = aggregateByField(validData, 'suma_lunara_contabilitate')
+	const daNu = aggregateDaNu(validData)
 
 	const total = data.length
 	const apeluriRatate = data.filter((r) => r.motiv_incheiere === 'Nu a răspuns la telefon').length
 	const refuzat = data.filter((r) => r.motiv_incheiere === 'A răspuns, nu a dorit să vorbească').length
 	const rataApeluriRatate = total > 0 ? ((apeluriRatate / total) * 100).toFixed(1) : '0'
 	const rataRefuzat = total > 0 ? ((refuzat / total) * 100).toFixed(1) : '0'
+	const rataValide = total > 0 ? ((n0 / total) * 100).toFixed(1) : '0'
 
 	const pieRadius = { inner: 20, outer: 42 }
 
@@ -100,7 +102,7 @@ export function LiveViewer() {
 			<div className="p-2 flex-shrink-0">
 				<h3 className="text-sm font-bold text-indigo-600 mb-1">LIVE</h3>
 				<p className="text-xs text-gray-500 mb-2">
-					n={data.length} | refuzat: {rataRefuzat}% | apeluri ratate: {rataApeluriRatate}%
+					n={total} n0={n0} | valide: {rataValide}% | refuzat: {rataRefuzat}% | apeluri ratate: {rataApeluriRatate}%
 				</p>
 			</div>
 			<div className="flex-1 min-h-0 flex flex-col gap-2 px-2 pb-2">
