@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 function formatRomanianPhone(phone: string | null | undefined): string {
 	if (!phone || typeof phone !== 'string') return '—'
@@ -12,10 +12,11 @@ function formatRomanianPhone(phone: string | null | undefined): string {
 }
 import { useAuth } from '@/lib/auth-context'
 import { CUILookup } from '@/components/cui-lookup'
-import { SurveyForm } from '@/components/survey-form'
+import { SurveyFormV2 } from '@/components/survey-form-v2'
 import { type CompanyData } from '@/lib/anaf-api'
-import { type SurveyFormData } from '@/lib/validation'
+import { type SurveyFormDataV2 } from '@/lib/validation-v2'
 import { supabase } from '@/lib/supabase'
+import type { SurveyMotiveOption } from '@/lib/supabase'
 
 export function SurveyDashboard() {
 	const { user, logout } = useAuth()
@@ -23,6 +24,20 @@ export function SurveyDashboard() {
 	const [callAnswered, setCallAnswered] = useState<boolean | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [successMessage, setSuccessMessage] = useState<string | null>(null)
+	const [motiveOptions, setMotiveOptions] = useState<SurveyMotiveOption[]>([])
+
+	const fetchMotiveOptions = useCallback(async () => {
+		const { data, error } = await supabase
+			.from('survey_motive_options')
+			.select('id, category, label, is_custom, created_at')
+			.order('category')
+			.order('id')
+		if (!error) setMotiveOptions((data as SurveyMotiveOption[]) || [])
+	}, [])
+
+	useEffect(() => {
+		fetchMotiveOptions()
+	}, [fetchMotiveOptions])
 
 	const handleCompanyFound = (companyData: CompanyData) => {
 		setCompany(companyData)
@@ -30,30 +45,59 @@ export function SurveyDashboard() {
 		setSuccessMessage(null)
 	}
 
-	const handleSubmit = async (data: SurveyFormData) => {
-		if (!user) return
+	const handleSubmit = async (data: SurveyFormDataV2) => {
+		if (!user || !company) return
 
 		setIsSubmitting(true)
 		try {
-			const { error } = await supabase
-				.from('survey_responses')
-				.insert([
-					{
-						...data,
-						operator: user.username,
-						telefon: company?.telefon || null,
-						administrator: company?.administrator || null
-					}
-				])
-
-			if (error) {
-				throw error
+			const row = {
+				cui: data.cui,
+				nume_firma: data.nume_firma,
+				localitate: data.localitate,
+				judet: data.judet,
+				cod_caen: data.cod_caen,
+				este_administrator: true,
+				operator: user.username,
+				telefon: company.telefon || null,
+				administrator: company.administrator || null,
+				motiv_incheiere: null,
+				q2_procent_cheltuieli: data.q2_procent_cheltuieli,
+				q3_relatie_contabil: data.q3_relatie_contabil,
+				q4_obligatie_intemeiata: data.q4_obligatie_intemeiata,
+				q5_capabil_score: data.q5_capabil_score === -1 ? 0 : data.q5_capabil_score,
+				q5_capabil_motive: data.q5_capabil_motive || null,
+				q6_motiv_automatizat: data.q6_motiv_automatizat,
+				q7_suma_lunara: data.q7_suma_lunara,
+				q8_de_ce_contabil: data.q8_de_ce_contabil,
+				q9_renunta_contabil: data.q9_renunta_contabil,
+				q10_varsta: data.q10_varsta,
+				q11_nivel_studii: data.q11_nivel_studii
 			}
 
-			// Show success message
-			setSuccessMessage(`Date trimise pentru ${company?.nume}`)
+			const { data: inserted, error } = await supabase
+				.from('survey_responses_v2')
+				.insert([row])
+				.select('id')
+				.single()
 
-			// Reset form for next survey
+			if (error) throw error
+
+			const responseId = inserted?.id
+			if (responseId) {
+				const motiveRows: { response_id: number; option_id: number }[] = []
+				;(data.q4_motive_option_ids || []).forEach((optionId) => {
+					motiveRows.push({ response_id: responseId, option_id: optionId })
+				})
+				;(data.q9_motive_option_ids || []).forEach((optionId) => {
+					motiveRows.push({ response_id: responseId, option_id: optionId })
+				})
+				if (motiveRows.length > 0) {
+					const { error: errMotives } = await supabase.from('survey_response_v2_motives').insert(motiveRows)
+					if (errMotives) throw errMotives
+				}
+			}
+
+			setSuccessMessage(`Date trimise pentru ${company.nume}`)
 			setCompany(null)
 			setCallAnswered(null)
 		} catch (error) {
@@ -76,12 +120,11 @@ export function SurveyDashboard() {
 		setSuccessMessage(null)
 	}
 
-	const handleSurveyAbandoned = async (partialData: Partial<SurveyFormData>) => {
+	const handleSurveyAbandoned = async (partialData: Partial<SurveyFormDataV2>) => {
 		if (!user || !company) return
 
 		setIsSubmitting(true)
 		try {
-			const safeScore = (s: number | undefined) => (typeof s === 'number' && s >= 0 && s <= 5 ? s : 0)
 			const payload = {
 				cui: company.cui,
 				nume_firma: company.nume,
@@ -89,20 +132,25 @@ export function SurveyDashboard() {
 				judet: company.judet,
 				cod_caen: company.codCaen,
 				este_administrator: true,
-				procent_cheltuieli_contabil: partialData.procent_cheltuieli_contabil || 'N/A',
-				impediment_contabil_score: safeScore(partialData.impediment_contabil_score),
-				justificare_obligativitate_score: safeScore(partialData.justificare_obligativitate_score),
-				capabil_contabilitate_proprie_score: safeScore(partialData.capabil_contabilitate_proprie_score),
-				influenta_costuri_contabilitate: partialData.influenta_costuri_contabilitate || 'N/A',
-				suma_lunara_contabilitate: partialData.suma_lunara_contabilitate || 'N/A',
 				operator: user.username,
 				telefon: company.telefon || null,
 				administrator: company.administrator || null,
-				motiv_incheiere: 'Apel închis / abandonat de respondent'
+				motiv_incheiere: 'Apel închis / abandonat de respondent',
+				q2_procent_cheltuieli: partialData.q2_procent_cheltuieli || null,
+				q3_relatie_contabil: partialData.q3_relatie_contabil || null,
+				q4_obligatie_intemeiata: partialData.q4_obligatie_intemeiata || null,
+				q5_capabil_score: partialData.q5_capabil_score != null && partialData.q5_capabil_score >= 0 ? partialData.q5_capabil_score : null,
+				q5_capabil_motive: partialData.q5_capabil_motive || null,
+				q6_motiv_automatizat: partialData.q6_motiv_automatizat || null,
+				q7_suma_lunara: partialData.q7_suma_lunara || null,
+				q8_de_ce_contabil: partialData.q8_de_ce_contabil || null,
+				q9_renunta_contabil: partialData.q9_renunta_contabil || null,
+				q10_varsta: partialData.q10_varsta || null,
+				q11_nivel_studii: partialData.q11_nivel_studii || null
 			}
 
 			const { error } = await supabase
-				.from('survey_responses')
+				.from('survey_responses_v2')
 				.insert([payload])
 
 			if (error) {
@@ -126,7 +174,7 @@ export function SurveyDashboard() {
 		setIsSubmitting(true)
 		try {
 			const { error } = await supabase
-				.from('survey_responses')
+				.from('survey_responses_v2')
 				.insert([
 					{
 						cui: company.cui,
@@ -135,12 +183,6 @@ export function SurveyDashboard() {
 						judet: company.judet,
 						cod_caen: company.codCaen,
 						este_administrator: false,
-						procent_cheltuieli_contabil: 'N/A',
-						impediment_contabil_score: 0,
-						justificare_obligativitate_score: 0,
-						capabil_contabilitate_proprie_score: 0,
-						influenta_costuri_contabilitate: 'N/A',
-						suma_lunara_contabilitate: 'N/A',
 						operator: user.username,
 						telefon: company.telefon || null,
 						administrator: company.administrator || null,
@@ -176,7 +218,13 @@ export function SurveyDashboard() {
 							Operator: <span className="font-semibold capitalize">{user?.username}</span>
 						</p>
 					</div>
-					<div className="flex gap-2">
+					<div className="flex gap-2 flex-wrap">
+						<a
+							href="/statistici-vechi-1"
+							className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
+						>
+							Statistici vechi
+						</a>
 						{company && (
 							<button
 								onClick={handleRestartWithoutSave}
@@ -292,9 +340,10 @@ export function SurveyDashboard() {
 				)}
 
 				{company && !successMessage && user && callAnswered === true && (
-					<SurveyForm
+					<SurveyFormV2
 						company={company}
 						operator={user.username}
+						motiveOptions={motiveOptions}
 						onSubmit={handleSubmit}
 						onSurveyEnded={() => handleSurveyEnded('Administrator absent la telefon')}
 						onSurveyAbandoned={handleSurveyAbandoned}
