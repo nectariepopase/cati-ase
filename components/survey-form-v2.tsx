@@ -305,20 +305,25 @@ export function SurveyFormV2({
 				</div>
 				{(q4Val === 'da' || q4Val === 'nu') && (
 					<div className="mt-4 pl-2 border-l-2 border-indigo-200">
-						<p className="text-sm font-medium text-gray-700 mb-2">Motive (opțional):</p>
+						<p className="text-sm font-medium text-gray-700 mb-1">Motive (opțional):</p>
+						<p className="text-xs text-gray-500 mb-2">Puteți selecta mai multe opțiuni.</p>
 						<div className="flex flex-wrap gap-2 mb-2">
-							{obligatieOptions.map((opt) => (
-								<button
-									key={opt.id}
-									type="button"
-									onClick={() => toggleMotive('obligatie_intemeiata', opt.id)}
-									className={`px-3 py-1.5 rounded text-sm ${
-										q4MotiveIds.includes(opt.id) ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-									}`}
-								>
-									{opt.label}
-								</button>
-							))}
+							{obligatieOptions.map((opt) => {
+								const selected = q4MotiveIds.includes(opt.id)
+								return (
+									<button
+										key={opt.id}
+										type="button"
+										onClick={() => toggleMotive('obligatie_intemeiata', opt.id)}
+										className={`px-3 py-1.5 rounded text-sm flex items-center gap-1.5 ${
+											selected ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+										}`}
+									>
+										{selected && <span aria-hidden>✓</span>}
+										{opt.label}
+									</button>
+								)
+							})}
 						</div>
 						<div className="flex gap-2 flex-wrap items-center">
 							<input
@@ -510,20 +515,25 @@ export function SurveyFormV2({
 				</div>
 				{(q9Val === 'da' || q9Val === 'nu') && (
 					<div className="mt-4 pl-2 border-l-2 border-indigo-200">
-						<p className="text-sm font-medium text-gray-700 mb-2">Motive (opțional):</p>
+						<p className="text-sm font-medium text-gray-700 mb-1">Motive (opțional):</p>
+						<p className="text-xs text-gray-500 mb-2">Puteți selecta mai multe opțiuni.</p>
 						<div className="flex flex-wrap gap-2 mb-2">
-							{renuntaOptions.map((opt) => (
-								<button
-									key={opt.id}
-									type="button"
-									onClick={() => toggleMotive('renunta_contabil', opt.id)}
-									className={`px-3 py-1.5 rounded text-sm ${
-										q9MotiveIds.includes(opt.id) ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-									}`}
-								>
-									{opt.label}
-								</button>
-							))}
+							{renuntaOptions.map((opt) => {
+								const selected = q9MotiveIds.includes(opt.id)
+								return (
+									<button
+										key={opt.id}
+										type="button"
+										onClick={() => toggleMotive('renunta_contabil', opt.id)}
+										className={`px-3 py-1.5 rounded text-sm flex items-center gap-1.5 ${
+											selected ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+										}`}
+									>
+										{selected && <span aria-hidden>✓</span>}
+										{opt.label}
+									</button>
+								)
+							})}
 						</div>
 						<div className="flex gap-2 flex-wrap items-center">
 							<input
