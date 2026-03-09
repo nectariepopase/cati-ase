@@ -291,7 +291,7 @@ export function StatisticiPrezentare() {
 
 					<div className="bg-white rounded-xl shadow-lg p-5 border border-slate-200 md:col-span-2">
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q7 Sumă lunară (lei)</p>
-						<div style={{ height: 360 }}>
+						<div style={{ height: 440 }}>
 							<ResponsiveContainer width="100%" height="100%">
 								<PieChart>
 									<Pie
