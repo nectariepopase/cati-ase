@@ -63,9 +63,63 @@ function aggregateDaNu(data: SurveyResponse[]): { name: string; value: number }[
 
 type OperatorFilter = 'all' | 'nectarie' | 'alexandra' | 'ioana'
 
+function formatResultsAsText(opts: {
+	operatorFilter: OperatorFilter
+	total: number
+	n0: number
+	daNu: { name: string; value: number }[]
+	daNuTotal: number
+	q2: { name: string; value: number }[]
+	q3: { score: string; count: number }[]
+	q4: { score: string; count: number }[]
+	q5: { score: string; count: number }[]
+	q6: { score: string; count: number }[]
+	q7: { name: string; value: number }[]
+}): string {
+	const filterLabel =
+		opts.operatorFilter === 'all' ? 'Toate' : opts.operatorFilter.charAt(0).toUpperCase() + opts.operatorFilter.slice(1)
+	const lines: string[] = [
+		'--- Rezultate Statistici vechi (set 1) ---',
+		`Filtru: ${filterLabel} | n=${opts.total} n0=${opts.n0}`,
+		'',
+		'Q1 DA/NU Admin'
+	]
+	const q1Total = opts.daNuTotal || 1
+	opts.daNu.forEach(({ name, value }) => {
+		const pct = ((value / q1Total) * 100).toFixed(1)
+		lines.push(`  ${name}: ${value} (${pct}%)`)
+	})
+	lines.push('', 'Q2 % cheltuieli')
+	const n0 = opts.n0 || 1
+	opts.q2.forEach(({ name, value }) => {
+		const pct = ((value / n0) * 100).toFixed(1)
+		lines.push(`  ${name}: ${value} (${pct}%)`)
+	})
+	const scoreQuestions = [
+		['Q3 Impediment (1-5)', opts.q3],
+		['Q4 Justificare (1-5)', opts.q4],
+		['Q5 Capabil (1-5)', opts.q5],
+		['Q6 Influență (1-5)', opts.q6]
+	] as const
+	scoreQuestions.forEach(([title, arr]) => {
+		lines.push('', title)
+		arr.forEach(({ score, count }) => {
+			const pct = ((count / n0) * 100).toFixed(1)
+			lines.push(`  ${score}: ${count} (${pct}%)`)
+		})
+	})
+	lines.push('', 'Q7 Sumă lunară')
+	opts.q7.forEach(({ name, value }) => {
+		const pct = ((value / n0) * 100).toFixed(1)
+		lines.push(`  ${name}: ${value} (${pct}%)`)
+	})
+	return lines.join('\n')
+}
+
 export function LiveViewerOld() {
 	const [data, setData] = useState<SurveyResponse[]>([])
 	const [operatorFilter, setOperatorFilter] = useState<OperatorFilter>('all')
+	const [copied, setCopied] = useState(false)
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -316,6 +370,55 @@ export function LiveViewerOld() {
 							</ResponsiveContainer>
 						</div>
 					</div>
+				</div>
+
+				<div className="bg-white rounded-lg shadow p-4 mt-6">
+					<div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+						<h3 className="text-sm font-bold text-gray-800">Rezultate text (copiabil)</h3>
+						<button
+							type="button"
+							onClick={() => {
+								const text = formatResultsAsText({
+									operatorFilter,
+									total,
+									n0,
+									daNu,
+									daNuTotal: daNuData.length,
+									q2,
+									q3,
+									q4,
+									q5,
+									q6,
+									q7
+								})
+								void navigator.clipboard.writeText(text).then(() => {
+									setCopied(true)
+									setTimeout(() => setCopied(false), 2000)
+								})
+							}}
+							className="px-3 py-1.5 rounded text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+						>
+							{copied ? 'Copiat!' : 'Copiază toate'}
+						</button>
+					</div>
+					<pre
+						className="font-mono text-sm text-gray-800 select-text whitespace-pre-wrap break-words bg-gray-50 p-3 rounded border border-gray-200 overflow-x-auto max-h-[400px] overflow-y-auto"
+						aria-label="Rezultate text copiabil"
+					>
+						{formatResultsAsText({
+							operatorFilter,
+							total,
+							n0,
+							daNu,
+							daNuTotal: daNuData.length,
+							q2,
+							q3,
+							q4,
+							q5,
+							q6,
+							q7
+						})}
+					</pre>
 				</div>
 			</div>
 		</div>
