@@ -10,7 +10,8 @@ import {
 	YAxis,
 	Tooltip,
 	ResponsiveContainer,
-	Legend
+	Legend,
+	LabelList
 } from 'recharts'
 import Link from 'next/link'
 
@@ -167,7 +168,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q3 Impediment (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q3_IMPEDIMENT} layout="vertical" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+								<BarChart data={Q3_IMPEDIMENT} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -180,7 +181,9 @@ export function StatisticiPrezentare() {
 										interval={0}
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
-									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr." />
+									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
+										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
 						</div>
@@ -190,7 +193,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q4 Justificare (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q4_JUSTIFICARE} layout="vertical" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+								<BarChart data={Q4_JUSTIFICARE} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -203,7 +206,9 @@ export function StatisticiPrezentare() {
 										interval={0}
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
-									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr." />
+									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
+										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
 						</div>
@@ -213,7 +218,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q5 Capabil (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q5_CAPABIL} layout="vertical" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+								<BarChart data={Q5_CAPABIL} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -226,7 +231,9 @@ export function StatisticiPrezentare() {
 										interval={0}
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
-									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr." />
+									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
+										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
 						</div>
@@ -236,7 +243,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q6 Influență (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q6_INFLUENTA} layout="vertical" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
+								<BarChart data={Q6_INFLUENTA} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -249,7 +256,9 @@ export function StatisticiPrezentare() {
 										interval={0}
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
-									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr." />
+									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
+										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
 						</div>
