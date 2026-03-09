@@ -89,6 +89,12 @@ const Q7_SUMA_LUNARA = [
 
 const pieRadius = { inner: 28, outer: 56 }
 const CHART_HEIGHT = 200
+const N0 = SUMMARY.n0
+
+function barLabelFormatter(value: unknown): string {
+	const n = Number(value)
+	return `${n} (${((n / N0) * 100).toFixed(1)}%)`
+}
 
 export function StatisticiPrezentare() {
 	return (
@@ -159,6 +165,7 @@ export function StatisticiPrezentare() {
 										))}
 									</Pie>
 									<Tooltip formatter={(value: number | undefined) => [value ?? 0, '']} contentStyle={{ fontSize: '12px' }} />
+									<Legend />
 								</PieChart>
 							</ResponsiveContainer>
 						</div>
@@ -168,7 +175,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q3 Impediment (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q3_IMPEDIMENT} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
+								<BarChart data={Q3_IMPEDIMENT} layout="vertical" margin={{ top: 0, right: 72, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -182,7 +189,7 @@ export function StatisticiPrezentare() {
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
 									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
-										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+										<LabelList dataKey="count" position="right" formatter={barLabelFormatter} style={{ fontSize: 11, fontWeight: 600 }} />
 									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
@@ -193,7 +200,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q4 Justificare (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q4_JUSTIFICARE} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
+								<BarChart data={Q4_JUSTIFICARE} layout="vertical" margin={{ top: 0, right: 72, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -207,7 +214,7 @@ export function StatisticiPrezentare() {
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
 									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
-										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+										<LabelList dataKey="count" position="right" formatter={barLabelFormatter} style={{ fontSize: 11, fontWeight: 600 }} />
 									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
@@ -218,7 +225,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q5 Capabil (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q5_CAPABIL} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
+								<BarChart data={Q5_CAPABIL} layout="vertical" margin={{ top: 0, right: 72, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -232,7 +239,7 @@ export function StatisticiPrezentare() {
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
 									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
-										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+										<LabelList dataKey="count" position="right" formatter={barLabelFormatter} style={{ fontSize: 11, fontWeight: 600 }} />
 									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
@@ -243,7 +250,7 @@ export function StatisticiPrezentare() {
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q6 Influență (1-5)</p>
 						<div style={{ height: CHART_HEIGHT }}>
 							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={Q6_INFLUENTA} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }}>
+								<BarChart data={Q6_INFLUENTA} layout="vertical" margin={{ top: 0, right: 72, left: 0, bottom: 0 }}>
 									<XAxis type="number" hide />
 									<YAxis
 										type="category"
@@ -257,7 +264,7 @@ export function StatisticiPrezentare() {
 									/>
 									<Tooltip contentStyle={{ fontSize: '12px' }} />
 									<Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} name="Nr.">
-										<LabelList dataKey="count" position="right" style={{ fontSize: 12, fontWeight: 600 }} />
+										<LabelList dataKey="count" position="right" formatter={barLabelFormatter} style={{ fontSize: 11, fontWeight: 600 }} />
 									</Bar>
 								</BarChart>
 							</ResponsiveContainer>
@@ -283,7 +290,18 @@ export function StatisticiPrezentare() {
 										))}
 									</Pie>
 									<Tooltip formatter={(value: number | undefined) => [value ?? 0, '']} contentStyle={{ fontSize: '12px' }} />
-									<Legend />
+									<Legend
+										content={({ payload }) => (
+											<div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 12px', maxWidth: 280, justifyContent: 'center' }}>
+												{payload?.map((entry, i) => (
+													<span key={i} style={{ whiteSpace: 'nowrap', fontSize: 11, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+														<span style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: entry.color, flexShrink: 0 }} />
+														{entry.value}
+													</span>
+												))}
+											</div>
+										)}
+									/>
 								</PieChart>
 							</ResponsiveContainer>
 						</div>
