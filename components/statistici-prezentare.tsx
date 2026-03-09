@@ -97,14 +97,16 @@ function barLabelFormatter(value: unknown): string {
 }
 
 const PIE_LABEL_FILL = '#374151'
+const PIE_LABEL_OFFSET = 22
 function renderPieLabel(props: { cx?: number; cy?: number; midAngle?: number; innerRadius?: number; outerRadius?: number; name?: string; value?: number; percent?: number }) {
 	const { cx = 0, cy = 0, midAngle = 0, innerRadius = 0, outerRadius = 0, name = '', value = 0, percent = 0 } = props
 	const RADIAN = Math.PI / 180
-	const radius = innerRadius + (outerRadius - innerRadius) * 0.5
+	const radius = outerRadius + PIE_LABEL_OFFSET
 	const x = cx + radius * Math.cos(-midAngle * RADIAN)
 	const y = cy + radius * Math.sin(-midAngle * RADIAN)
+	const isRight = Math.cos(-midAngle * RADIAN) >= 0
 	return (
-		<text x={x} y={y} fill={PIE_LABEL_FILL} textAnchor="middle" dominantBaseline="central" style={{ fontSize: 11, fontWeight: 600 }}>
+		<text x={x} y={y} fill={PIE_LABEL_FILL} textAnchor={isRight ? 'start' : 'end'} dominantBaseline="central" style={{ fontSize: 11, fontWeight: 600 }}>
 			{`${name}: ${value} (${(percent * 100).toFixed(1)}%)`}
 		</text>
 	)
