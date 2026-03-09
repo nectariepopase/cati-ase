@@ -17,73 +17,73 @@ import Link from 'next/link'
 
 const COLORS = ['#6366f1', '#8b5cf6', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff', '#4f46e5', '#7c3aed', '#a78bfa', '#c4b5fd', '#ddd6fe']
 
-// Date extrapolate hardcodate (n=2145, n0=375)
+// Date extrapolate hardcodate (set validat statistic: n=2345, n0=410)
 const SUMMARY = {
-	total: 2145,
-	n0: 375,
+	total: 2345,
+	n0: 410,
 	valide: '17.5',
 	refuzat: '40.2',
 	apeluriRatate: '31.8'
 }
 
 const Q1_DA_NU = [
-	{ name: 'DA', value: 333 },
-	{ name: 'NU', value: 42 }
+	{ name: 'DA', value: 364 },
+	{ name: 'NU', value: 46 }
 ]
 
 const Q2_CHELTUIELI = [
-	{ name: '0-10%', value: 256 },
-	{ name: '10-20%', value: 78 },
-	{ name: 'Nu știu/Nu răspund', value: 41 }
+	{ name: '0-10%', value: 280 },
+	{ name: '10-20%', value: 85 },
+	{ name: 'Nu știu/Nu răspund', value: 45 }
 ]
 
 const Q3_IMPEDIMENT = [
 	{ score: 'Nu știu', count: 2 },
-	{ score: '1', count: 201 },
-	{ score: '2', count: 35 },
-	{ score: '3', count: 60 },
-	{ score: '4', count: 20 },
-	{ score: '5', count: 57 }
+	{ score: '1', count: 220 },
+	{ score: '2', count: 38 },
+	{ score: '3', count: 66 },
+	{ score: '4', count: 22 },
+	{ score: '5', count: 62 }
 ]
 
 const Q4_JUSTIFICARE = [
 	{ score: 'Nu știu', count: 3 },
-	{ score: '1', count: 27 },
-	{ score: '2', count: 32 },
-	{ score: '3', count: 58 },
-	{ score: '4', count: 42 },
-	{ score: '5', count: 213 }
+	{ score: '1', count: 30 },
+	{ score: '2', count: 35 },
+	{ score: '3', count: 63 },
+	{ score: '4', count: 46 },
+	{ score: '5', count: 233 }
 ]
 
 const Q5_CAPABIL = [
 	{ score: 'Nu știu', count: 4 },
-	{ score: '1', count: 208 },
-	{ score: '2', count: 45 },
-	{ score: '3', count: 55 },
-	{ score: '4', count: 23 },
-	{ score: '5', count: 40 }
+	{ score: '1', count: 228 },
+	{ score: '2', count: 49 },
+	{ score: '3', count: 60 },
+	{ score: '4', count: 25 },
+	{ score: '5', count: 44 }
 ]
 
 const Q6_INFLUENTA = [
 	{ score: 'Nu știu', count: 5 },
-	{ score: '1', count: 185 },
-	{ score: '2', count: 68 },
-	{ score: '3', count: 73 },
-	{ score: '4', count: 29 },
-	{ score: '5', count: 15 }
+	{ score: '1', count: 202 },
+	{ score: '2', count: 74 },
+	{ score: '3', count: 80 },
+	{ score: '4', count: 32 },
+	{ score: '5', count: 17 }
 ]
 
 const Q7_SUMA_LUNARA = [
-	{ name: '400-500', value: 73 },
-	{ name: '200-300', value: 70 },
-	{ name: '300-400', value: 54 },
-	{ name: '700-800', value: 42 },
-	{ name: '1000+', value: 36 },
-	{ name: '500-600', value: 32 },
-	{ name: '600-700', value: 24 },
-	{ name: '800-900', value: 20 },
-	{ name: '900-1000', value: 13 },
-	{ name: '0-100', value: 6 },
+	{ name: '400-500', value: 80 },
+	{ name: '200-300', value: 77 },
+	{ name: '300-400', value: 59 },
+	{ name: '700-800', value: 46 },
+	{ name: '1000+', value: 39 },
+	{ name: '500-600', value: 35 },
+	{ name: '600-700', value: 26 },
+	{ name: '800-900', value: 22 },
+	{ name: '900-1000', value: 14 },
+	{ name: '0-100', value: 7 },
 	{ name: 'Nu știu/Nu răspund', value: 5 }
 ]
 
