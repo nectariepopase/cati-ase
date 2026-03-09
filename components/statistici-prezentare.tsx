@@ -273,15 +273,15 @@ export function StatisticiPrezentare() {
 
 					<div className="bg-white rounded-xl shadow-lg p-5 border border-slate-200 md:col-span-2">
 						<p className="text-sm font-semibold text-slate-700 mb-2">Q7 Sumă lunară (lei)</p>
-						<div style={{ height: CHART_HEIGHT }}>
+						<div style={{ height: 360 }}>
 							<ResponsiveContainer width="100%" height="100%">
 								<PieChart>
 									<Pie
 										data={Q7_SUMA_LUNARA}
 										cx="50%"
-										cy="50%"
-										innerRadius={pieRadius.inner}
-										outerRadius={pieRadius.outer}
+										cy="42%"
+										innerRadius={52}
+										outerRadius={104}
 										paddingAngle={2}
 										dataKey="value"
 									>
@@ -292,10 +292,10 @@ export function StatisticiPrezentare() {
 									<Tooltip formatter={(value: number | undefined) => [value ?? 0, '']} contentStyle={{ fontSize: '12px' }} />
 									<Legend
 										content={({ payload }) => (
-											<div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 12px', maxWidth: 280, justifyContent: 'center' }}>
+											<div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', maxWidth: 420, margin: '0 auto', justifyContent: 'center', width: '100%' }}>
 												{payload?.map((entry, i) => (
-													<span key={i} style={{ whiteSpace: 'nowrap', fontSize: 11, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-														<span style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: entry.color, flexShrink: 0 }} />
+													<span key={i} style={{ whiteSpace: 'nowrap', fontSize: 13, fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+														<span style={{ width: 14, height: 14, borderRadius: 2, backgroundColor: entry.color, flexShrink: 0 }} />
 														{entry.value}
 													</span>
 												))}
