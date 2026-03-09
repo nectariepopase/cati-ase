@@ -96,6 +96,20 @@ function barLabelFormatter(value: unknown): string {
 	return `${n} (${((n / N0) * 100).toFixed(1)}%)`
 }
 
+const PIE_LABEL_FILL = '#374151'
+function renderPieLabel(props: { cx?: number; cy?: number; midAngle?: number; innerRadius?: number; outerRadius?: number; name?: string; value?: number; percent?: number }) {
+	const { cx = 0, cy = 0, midAngle = 0, innerRadius = 0, outerRadius = 0, name = '', value = 0, percent = 0 } = props
+	const RADIAN = Math.PI / 180
+	const radius = innerRadius + (outerRadius - innerRadius) * 0.5
+	const x = cx + radius * Math.cos(-midAngle * RADIAN)
+	const y = cy + radius * Math.sin(-midAngle * RADIAN)
+	return (
+		<text x={x} y={y} fill={PIE_LABEL_FILL} textAnchor="middle" dominantBaseline="central" style={{ fontSize: 11, fontWeight: 600 }}>
+			{`${name}: ${value} (${(percent * 100).toFixed(1)}%)`}
+		</text>
+	)
+}
+
 export function StatisticiPrezentare() {
 	return (
 		<div className="min-h-screen bg-slate-100 p-6">
@@ -159,6 +173,8 @@ export function StatisticiPrezentare() {
 										outerRadius={pieRadius.outer}
 										paddingAngle={2}
 										dataKey="value"
+										label={renderPieLabel}
+										labelLine={{ stroke: PIE_LABEL_FILL }}
 									>
 										{Q2_CHELTUIELI.map((_, i) => (
 											<Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -284,6 +300,8 @@ export function StatisticiPrezentare() {
 										outerRadius={104}
 										paddingAngle={2}
 										dataKey="value"
+										label={renderPieLabel}
+										labelLine={{ stroke: PIE_LABEL_FILL }}
 									>
 										{Q7_SUMA_LUNARA.map((_, i) => (
 											<Cell key={i} fill={COLORS[i % COLORS.length]} />
