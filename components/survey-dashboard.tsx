@@ -225,6 +225,12 @@ export function SurveyDashboard() {
 						>
 							Statistici vechi
 						</a>
+						<a
+							href="/statistici-prezentare"
+							className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
+						>
+							Statistici prezentare
+						</a>
 						{company && (
 							<button
 								onClick={handleRestartWithoutSave}
